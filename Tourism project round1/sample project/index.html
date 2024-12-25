@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Protest+Riot&display=swap"
+        rel="stylesheet">
+    <title>Explore India with Us!</title>
+    <style> h1 {
+        font-family: cursive;
+    }
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #ffb703;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        .places-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-gap: 20px;
+            padding: 20px;
+        }
+
+        .tourist-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s ease-in-out;
+            position: relative;
+        }
+
+        .tourist-card:hover {
+            transform: scale(1.05);
+        }
+
+        .images-container {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .images-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .details-container {
+            padding: 10px;
+            display: none;
+        }
+
+        .details-container.show {
+            display: block;
+        }
+
+        .details-container img {
+            width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
+
+        .footer-info {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .details-page {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 999;
+        }
+
+        .details-page-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>explore India and its diversties</h1>
+    </header>
+
+    <div class="places-grid"></div>
+
+    <script>
+        const touristPlaces = [
+            {
+                name: "Delhi",
+                description: "Explore the capital city with its historical landmarks and bustling markets.",
+                festivals: ["Diwali", "Holi", "Eid"],
+                images: ["https://s3u9x3j9.stackpathcdn.com/wp-content/uploads/2020/11/india-gate.jpg", "https://www.tripsavvy.com/thmb/pAlZ4kx0tM9HFLmgkYbqMlfxaok=/2116x1417/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-846359134-5b515328c9e77c003738e40c.jpg", "https://www.tripsavvy.com/thmb/EamG8gwnVK1VCqLrqtC1lGuLGPg=/2121x1414/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-148743699-5b514725c9e77c005b2e61bd.jpg"]
+            },
+            {
+                name: "Goa",
+                description: "Relax on the beautiful beaches and experience the vibrant nightlife.",
+                festivals: ["Carnival", "Shigmo", "Ganesh Chaturthi"],
+                images: ["https://cdn.pixabay.com/photo/2018/12/20/12/36/sunset-3885886_1280.jpg", "https://cdn.pixabay.com/photo/2018/01/09/06/43/sea-3070982_1280.jpg", "https://cdn.pixabay.com/photo/2019/07/23/17/18/india-4358270_960_720.jpg"]
+            },
+            {
+                name: "Mumbai",
+                description: "Experience the Bollywood magic and explore the bustling city life.",
+                festivals: ["Ganesh Chaturthi", "Navratri", "Diwali"],
+                images: ["https://cdn.pixabay.com/photo/2016/05/03/20/01/mumbai-1370023_1280.jpg", "https://cdn.pixabay.com/photo/2019/08/26/15/33/visapur-fort-4432061_1280.jpg", "https://cdn.pixabay.com/photo/2014/11/15/23/29/fairytale-532850_1280.jpg"]
+
+
+            },
+            {
+                name: "Jaipur",
+                description: "Visit the Pink City known for its rich history and vibrant culture.",
+                festivals: ["Diwali", "Gangaur", "Teej"],
+                images: ["https://cdn.pixabay.com/photo/2018/03/15/22/02/udaipur-3229676_1280.jpg", "https://cdn.pixabay.com/photo/2018/03/18/20/55/udaipur-3238283_1280.jpg", "https://cdn.pixabay.com/photo/2020/05/22/06/01/landscape-5203914_1280.jpg", "https://cdn.pixabay.com/photo/2016/11/21/14/45/palace-1845778_1280.jpg"]
+            },
+            {
+                name: "Kerala",
+                description: "Explore the serene backwaters and enjoy the cultural diversity.",
+                festivals: ["Onam", "Vishu", "Thrissur Pooram"],
+                images: ["https://cdn.pixabay.com/photo/2016/01/14/03/25/sunset-1139293_1280.jpg", "https://cdn.pixabay.com/photo/2017/02/09/16/11/houseboat-2052738_1280.jpg", "https://cdn.pixabay.com/photo/2017/06/27/14/20/couple-2447450_1280.jpg"]
+            },
+            {
+                name: "Agra",
+                description: "Home to the iconic Taj Mahal, Agra is a must-visit for history lovers.",
+                festivals: ["Taj Mahotsav", "Diwali", "Eid"],
+                images: ["https://cdn.pixabay.com/photo/2019/03/12/20/19/india-4051753_1280.jpg", "https://cdn.pixabay.com/photo/2020/01/08/07/53/architecture-4749511_1280.jpg", "https://cdn.pixabay.com/photo/2018/09/04/16/48/taj-mahal-3654227_1280.jpg"]
+            },
+            {
+                name: "Varanasi",
+                description: "Explore the spiritual and cultural heritage of this ancient city on the banks of the Ganges.",
+                festivals: ["Dev Deepawali", "Shivratri", "Chhath Puja"],
+                images: ["https://cdn.pixabay.com/photo/2018/05/01/14/29/india-3365731_1280.jpg", "https://cdn.pixabay.com/photo/2021/11/13/15/02/india-6791558_1280.jpg", "varanasi3.jpg", "https://cdn.pixabay.com/photo/2019/07/19/11/16/ganga-aarti-4348549_960_720.jpg"]
+            },
+            {
+                name: "Rishikesh",
+                description: "Known as the 'Yoga Capital of the World,' Rishikesh offers a tranquil retreat in the Himalayas.",
+                festivals: ["Ganga Aarti", "International Yoga Festival", "Diwali"],
+                images: ["https://cdn.pixabay.com/photo/2022/10/05/07/11/temple-7499926_960_720.jpg", "https://cdn.pixabay.com/photo/2022/10/05/07/11/hansraj-raghuwanshi-7499933_1280.jpg", "https://cdn.pixabay.com/photo/2016/01/11/13/05/monk-1133583_1280.jpg"]
+            },
+            {
+                name: "Shimla",
+                description: "Experience the charm of the snow-capped mountains and colonial architecture.",
+                festivals: ["Summer Festival", "Ice Skating Carnival", "Diwali"],
+                images: ["https://cdn.pixabay.com/photo/2018/02/07/16/52/shimla-3137468_1280.jpg", "https://media.istockphoto.com/id/515816334/photo/christ-church-shimla.webp?b=1&s=170667a&w=0&k=20&c=n3d-aESOofqdtvK6GMim5FcN4dohjwhNZz5eF3b-tiM=", "https://cdn.pixabay.com/photo/2021/01/09/22/27/shimla-5903633_1280.jpg", "https://cdn.pixabay.com/photo/2020/01/08/21/26/sunrise-4751304_960_720.jpg"]
+            },
+            {
+                name: "Kolkata",
+                description: "Immerse yourself in the cultural festivities and historical landmarks of the 'City of Joy.'",
+                festivals: ["Durga Puja", "Kali Puja", "Diwali"],
+                images: ["https://cdn.pixabay.com/photo/2015/04/17/10/39/durga-727064_1280.jpg", "https://cdn.pixabay.com/photo/2020/06/11/11/06/victoria-5286267_1280.jpg", "https://cdn.pixabay.com/photo/2018/05/08/07/33/indian-museum-3382432_1280.jpg"]
+            },
+            {
+                name: "Chennai",
+                description: "Discover the vibrant culture, temples, and beaches of the southern city.",
+                festivals: ["Pongal", "Navratri", "Diwali"],
+                images: ["https://cdn.pixabay.com/photo/2017/05/18/21/51/chennai-2324861_960_720.jpg", "https://cdn.pixabay.com/photo/2022/11/03/16/57/dancer-7567928_1280.jpg", "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"]
+            },
+            {
+                name: "Hyderabad",
+                description: "Experience the blend of history, cuisine, and modernity in the 'City of Pearls.'",
+                festivals: ["Bathukamma", "Diwali", "Eid"],
+                images: ["https://media-cdn.tripadvisor.com/media/photo-m/1280/0f/98/f7/df/charminar.jpg", "https://www.fabhotels.com/blog/wp-content/uploads/2019/03/Ramoji-Film-City.jpg", "https://t3.ftcdn.net/jpg/04/66/39/10/240_F_466391035_c339jQd5H7QW9cwrcE2Jn4Ucv7ef8KhR.jpg"]
+            },
+            {
+                name: "Ooty",
+                description: "Escape to the 'Queen of Hill Stations' and enjoy the picturesque landscapes.",
+                festivals: ["Summer Festival", "Diwali", "Christmas"],
+                images: ["https://cdn.pixabay.com/photo/2018/12/18/15/31/ooty-3882538_960_720.jpg", "https://cdn.pixabay.com/photo/2017/10/10/07/48/hills-2836301_1280.jpg", "https://cdn.pixabay.com/photo/2017/05/09/15/21/ooty-2298522_1280.jpg"]
+            },
+            {
+                name: "Pondicherry",
+                description: "Experience the French influence, beaches, and serene atmosphere.",
+                festivals: ["Pongal", "Bastille Day", "Diwali"],
+                images: ["https://hikerwolf.com/wp-content/uploads/2020/03/WhatsApp-Image-2020-03-31-at-3.18.20-PM-1.jpeg", "", "https://assets-news.housing.com/news/wp-content/uploads/2022/07/03234734/5.jpg", "https://assets-news.housing.com/news/wp-content/uploads/2022/08/21185301/PONDICHERRY-FEATURE-compressed.jpg"]
+            },
+            {
+                name: "Udaipur",
+                description: "Explore the 'City of Lakes' known for its palaces, temples, and vibrant markets.",
+                festivals: ["Mewar Festival", "Diwali", "Holi"],
+                images: ["https://t4.ftcdn.net/jpg/00/85/61/27/360_F_85612737_veoCTufAsIuYJC8rjs06CA4HrLw30r8l.jpg", "https://thumbs.dreamstime.com/b/city-palace-pichola-lake-night-udaipur-rajasthan-india-asia-30769223.jpg", "https://cdn.pixabay.com/photo/2017/08/28/20/27/market-2691177_960_720.jpg"]
+            },
+            {
+                name: "Darjeeling",
+                description: "Enjoy the scenic beauty, tea gardens, and toy train rides in the Himalayan foothills.",
+                festivals: ["Losar", "Dasain", "Diwali"],
+                images: ["https://cdn.pixabay.com/photo/2017/11/13/16/37/darjeeling-2946119_960_720.jpg", "https://cdn.pixabay.com/photo/2020/03/29/16/19/sky-4981313_960_720.jpg", "https://cdn.pixabay.com/photo/2021/06/06/09/18/darjeeling-6314833_1280.jpg"]
+            },
+            {
+                name: "Ahmedabad",
+                description: "Immerse yourself in the cultural festivities and rich history of the 'Manchester of the East.'",
+                festivals: ["Navratri", "Uttarayan", "Diwali"],
+                images: ["https://www.tourmyindia.com/blog//wp-content/uploads/2021/11/Best-Places-to-Visit-in-Ahmedabad.jpg", "https://ngs-space1.sgp1.digitaloceanspaces.com/am/uploads/mediaGallery/image/1616791348119.jpg-org", "https://st1.latestly.com/wp-content/uploads/2019/09/Garba.jpg"]
+            },
+            {
+                name: "Amritsar",
+                description: "Visit the spiritual and cultural center known for the Golden Temple.",
+                festivals: ["Baisakhi", "Diwali", "Guru Nanak Jayanti"],
+                images: ["https://images.unsplash.com/photo-1623059508779-2542c6e83753?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Z29sZGVuJTIwdGVtcGxlfGVufDB8fDB8fHww", "https://www.bhmpics.com/downloads/golden-temple-wallpaper/59.golden-temple-8.jpg", "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi3gvVxqnrh9rvfjIJtceZjcJeKywxQ-xUGHDqSc8VcPNgRHX49VjvJMUiZXfkBCwrLusY71ImvMJ2vT8NGMvu5zk7wkQp9ZLxvjnA8cXdjRu6LnSC48YdoxFNh3FXiMHltKdcmvbX4bTvvK1x8AgJwKSS8FRHeqOi1sRqy9TIYv1k0O08kVdu0og16eOZG/s1440/WhatsApp%20Image%202023-07-16%20at%2011.16.06%20AM%20(1).jpeg"]
+            },
+            {
+                name: "Rajkot",
+                description: "Experience the vibrant culture, traditional handicrafts, and delicious cuisine.",
+                festivals: ["Navratri", "Janmashtami", "Diwali"],
+                images: ["https://static.javatpoint.com/tourist-places/images/tourist-places-in-rajkot7.png", "https://i0.wp.com/www.tusktravel.com/blog/wp-content/uploads/2022/07/Shri-Hari-Temple-Porbandar-Gujarat.jpg?fit=1200%2C803&ssl=1", "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/22/da/7a/97/caption.jpg?w=300&h=300&s=1"]
+            },
+            {
+                name: "Srinagar",
+                description: "Discover the beauty of Dal Lake, houseboats, and Mughal gardens in the 'Paradise on Earth.'",
+                festivals: ["Tulip Festival", "Eid", "Diwali"],
+                images: ["https://www.holidify.com/images/bgImages/SRINAGAR.jpg", "https://i0.wp.com/www.tusktravel.com/blog/wp-content/uploads/2021/02/Srinagar-Houseboats.jpg?fit=1064%2C694&ssl=1", "https://www.tripsavvy.com/thmb/RAUfNgve9F4adGgSv9OTOyKi0PQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-584374227-58ac1d273df78c345b154d7a.jpg"]
+            },
+            {
+                name: "Mysore",
+                description: "Witness the grandeur of the Dasara festival and explore the historical landmarks.",
+                festivals: ["Dasara", "Diwali", "Navratri"],
+                images: ["https://media.istockphoto.com/id/1281931838/photo/the-mysore-palace-at-night-in-mysore-in-southern-india.jpg?s=612x612&w=0&k=20&c=ylyE9VYrc008JnHKdXKDxbJx-_I2U8-oQFJDzwJk9Pw=", "https://media.gettyimages.com/id/172124032/photo/mysore-palace-at-dusk.jpg?s=612x612&w=gi&k=20&c=x_PdUA6f831MGpzy1LQ4yrmZ1xSS53sP4Kjjrp9bxZk=", "https://i0.wp.com/mysuruinfrahub.com/wp-content/uploads/2023/08/mysorepalace3.jpg?fit=1200%2C675&ssl=1"]
+            },
+            {
+                name: "Kanyakumari",
+                description: "Experience the confluence of the Arabian Sea, Bay of Bengal, and Indian Ocean.",
+                festivals: ["Chaitra Purnima", "Diwali", "Pongal"],
+                images: ["https://images.unsplash.com/photo-1573043712293-2eb70e9e36ea?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8a2FueWFrdW1hcml8ZW58MHx8MHx8fDA%3D", "https://media.istockphoto.com/id/470068998/photo/peaceful-scene-of-kanyakumari-india.jpg?s=612x612&w=0&k=20&c=ElJHWd993zBs1cjL_XAxEscAZPMlwoqAEq-52m7Jpmg=", "https://c0.wallpaperflare.com/preview/860/647/655/india-kanyakumari-beach-sunset.jpg"]
+            },
+            {
+                name: "Lucknow",
+                description: "Explore the 'City of Nawabs' known for its architectural wonders and rich history.",
+                festivals: ["Lucknow Mahotsav", "Diwali", "Eid"],
+                images: ["https://cdn.educba.com/academy/wp-content/uploads/2022/12/Tourist-Places-in-Lucknow-1.jpg", "https://lucknowtourism.co.in/images/places-to-visit/header/rumi-darwaza-lucknow-tourism-entry-fee-timings-holidays-reviews-header.jpg"]
+            },
+            {
+                name: "Jaisalmer",
+                description: "Experience the magic of the golden sand dunes and the majestic Jaisalmer Fort.",
+                festivals: ["Desert Festival", "Diwali", "Holi"],
+                images: ["https://media.istockphoto.com/id/942152278/photo/gadisar-lake-at-jaisalmer-rajasthan-at-sunrise-with-ancient-temples-and-archaeological-ruins.jpg?s=612x612&w=0&k=20&c=HvhbHZ8HH_lAjAAI2pmqL4mUipyyAwy31qp5jjKQTO0=", "https://t3.ftcdn.net/jpg/01/03/26/16/360_F_103261625_QzFHOqadSNB11mzCoOf41SoV95MUqE06.jpg", "https://media.istockphoto.com/id/494659822/photo/india-bada-bagh-cenotaph-in-jaisalmer-rajasthan.jpg?s=612x612&w=0&k=20&c=jKaURS6SI4HPmLKWv_m4MaFh2RgC94FoABfinqJPMGU="]
+            },
+            {
+                name: "Nainital",
+                description: "Escape to the 'City of Lakes' surrounded by mountains and lush greenery.",
+                festivals: ["Nanda Devi Festival", "Diwali", "Christmas"],
+                images: ["https://www.uttarakhandtraveltourism.com/wp-content/uploads/2022/02/Nainital-1.png", "", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRY4S-XA4dQ8jsHfLmlc-imi9e1l167eBTn5i2RwuoTmNYgnE-TVoQ71AZyPZuFfj5xZhQ&usqp=CAU"]
+            },
+            {
+                name: "Bhopal",
+                description: "Explore the city's historical monuments, lakes, and vibrant culture.",
+                festivals: ["Diwali", "Navratri", "Eid"],
+                images: ["https://cdn.pixabay.com/photo/2012/02/18/22/54/sunset-14782_1280.jpg", "https://cdn.pixabay.com/photo/2018/05/17/11/09/cenotaph-3408277_1280.jpg", "https://cdn.pixabay.com/photo/2018/12/17/15/04/mahadev-3880558_1280.jpg"]
+            },
+            {
+                name: "Madurai",
+                description: "Visit the ancient city known for its temples, cultural festivals, and traditions.",
+                festivals: ["Chithirai Festival", "Diwali", "Pongal"],
+                images: ["https://www.abhibus.com/blog/wp-content/uploads/2023/04/Madurai-Meenakshi-Temple-History-Timings-How-to-Reach.jpg", "https://static.toiimg.com/thumb/105264617/Colourful-temples-in-Madurai.jpg?width=1200&height=900", "https://thumbs.dreamstime.com/z/detail-menakshi-temple-madurai-probably-one-most-beautiful-experiences-one-can-do-india-colors-smells-31686856.jpg?ct=jpeg"]
+            },
+            {
+                name: "Gangtok",
+                description: "Explore the picturesque landscapes and Buddhist monasteries in the capital of Sikkim.",
+                festivals: ["Losar", "Saga Dawa", "Diwali"],
+                images: ["https://assets.traveltriangle.com/blog/wp-content/uploads/2014/11/Namchi.jpg", "https://www.esikkimtourism.in/wp-content/uploads/2019/04/3rd-image.jpg", "https://trisoj.com/travel-guide/wp-content/uploads/2022/11/Places-to-visit-in-Gangtok.png"]
+            },
+            {
+                name: "Trivandrum",
+                description: "Discover the cultural richness and natural beauty of the southernmost tip of India.",
+                festivals: ["Onam", "Attukal Pongala", "Diwali"],
+                images: ["https://www.keralabackwater.com/blog/wp-content/uploads/2017/04/amzing-places-to-visit-thiruvananthapuram.jpg", "https://www.keralaholidays.com/uploads/tourpackages-gallery/thumb/Enticing-South-Indian-Vistas.jpg", "https://www.keralaseasons.com/img/tri1.jpeg"]
+            },
+            {
+                name: "Puri",
+                description: "Visit the pilgrimage city known for the Jagannath Temple and the Rath Yatra festival.",
+                festivals: ["Rath Yatra", "Diwali", "Holi"],
+                images: ["https://www.mypuritour.com/wp-content/uploads/2022/08/puri-tour-2022.jpeg", "https://shivshankartirthyatra.com/blog/wp-content/uploads/2021/02/Puri1-1536x862-1.jpg", "https://m.economictimes.com/thumb/msid-101087073,width-1200,height-900,resizemode-4,imgsize-204786/puri.jpg"]
+            },
+            // Add more tourist places as needed
+            {
+                name: "Bodh Gaya",
+                description: "Visit the pilgirmage site and the land of lord Budhha, explore the cultural heirtage of Buddhism and its marvellous monasteries alongwith glass bridge.",
+                festivals: ["Buddha Mahotsava", "Buddha Jayanati", "Nyingma Monlam chenmo"],
+                images: ["https://cdn.pixabay.com/photo/2016/05/26/00/59/gayasan-1416176_1280.jpg", "https://as1.ftcdn.net/v2/jpg/04/07/59/56/1000_F_407595629_Lgt8vvVkg5JHpzaCM5vivGcQLiCX8uvK.jpg", "https://www.travelworldplanet.com/wp-content/uploads/2018/08/The-Mahabodhi-Temple.jpg"]
+            }
+            // ...
+        ];
+
+
+        function createTouristCard(place) {
+            const card = document.createElement("div");
+            card.classList.add("tourist-card");
+
+            const imagesContainer = document.createElement("div");
+            imagesContainer.classList.add("images-container");
+
+            let currentImageIndex = 0;
+            const imgElement = document.createElement("img");
+            imgElement.src = place.images[currentImageIndex];
+            imgElement.addEventListener("click", function () {
+                showDetailsPage(place);
+            });
+
+            setInterval(function () {
+                currentImageIndex = (currentImageIndex + 1) % place.images.length;
+                imgElement.src = place.images[currentImageIndex];
+            }, 3000); // Change image every 3 seconds
+
+            imagesContainer.appendChild(imgElement);
+
+            const detailsContainer = document.createElement("div");
+            detailsContainer.classList.add("details-container");
+
+            const title = document.createElement("h3");
+            title.textContent = place.name;
+
+            const description = document.createElement("p");
+            description.textContent = place.description;
+
+            const festivals = document.createElement("p");
+            festivals.textContent = "Festivals: " + place.festivals.join(", ");
+
+            detailsContainer.appendChild(title);
+            detailsContainer.appendChild(description);
+            detailsContainer.appendChild(festivals);
+
+            card.appendChild(imagesContainer);
+            card.appendChild(detailsContainer);
+
+            card.addEventListener("mouseenter", function () {
+                detailsContainer.classList.add("show");
+            });
+
+            card.addEventListener("mouseleave", function () {
+                detailsContainer.classList.remove("show");
+            });
+
+            return card;
+        }
+
+        function initializePage() {
+            const placesGrid = document.querySelector(".places-grid");
+
+            touristPlaces.forEach(place => {
+                const card = createTouristCard(place);
+                placesGrid.appendChild(card);
+            });
+        }
+
+        function showDetailsPage(place) {
+            const detailsPage = document.createElement("div");
+            detailsPage.classList.add("details-page");
+
+            const detailsContent = document.createElement("div");
+            detailsContent.classList.add("details-page-content");
+
+            const closeBtn = document.createElement("span");
+            closeBtn.classList.add("close-button");
+            closeBtn.innerHTML = "&times;";
+            closeBtn.addEventListener("click", function () {
+                detailsPage.style.display = "none";
+            });
+
+            const title = document.createElement("h2");
+            title.textContent = place.name;
+
+            const description = document.createElement("p");
+            description.textContent = place.description;
+
+            const festivals = document.createElement("p");
+            festivals.textContent = "Festivals: " + place.festivals.join(", ");
+
+            detailsContent.appendChild(closeBtn);
+            detailsContent.appendChild(title);
+            detailsContent.appendChild(description);
+            detailsContent.appendChild(festivals);
+
+            detailsPage.appendChild(detailsContent);
+            document.body.appendChild(detailsPage);
+
+            detailsPage.style.display = "flex";
+        }
+
+        initializePage();
+    </script>
+</body>
+
+</html>
